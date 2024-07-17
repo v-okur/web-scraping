@@ -1,6 +1,6 @@
 /* const { postLeague } = require("../../api/postLeague"); */
 const teamScraper = require("./teamScraper");
-const db = require("../../darabase/db");
+const db = require("../../database/db");
 
 async function leagueScraper(browser, page, competition) {
   const allowedTiers = [
