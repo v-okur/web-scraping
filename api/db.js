@@ -27,12 +27,16 @@ async function connect() {
 connect();
 
 async function insert(entityName, data) {
-  const db = await connect();
-  const collection = db.collection(entityName);
-  await collection.insertOne(data);
-  console.log(
-    `${entityName.slice(0, -1)} added to ${entityName.toUpperCase()} collection`
-  );
+  try {
+    const db = await connect();
+    const collection = db.collection(entityName);
+    //    await collection.insertOne(data);
+    delete data._id;
+    await collection.replaceOne({ _id: data._id }, data);
+    console.log(`${data.name} added to ${entityName.toUpperCase()} collection`);
+  } catch (error) {
+    console.log("Database'e aktarım yaparken hata oluştu:", data.name, error);
+  }
 }
 
 async function setCaptain(team_id, player_id) {

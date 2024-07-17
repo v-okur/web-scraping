@@ -13,7 +13,7 @@ async function leagueScraper(browser, page, competition) {
   ];
 
   try {
-    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=1`);
+    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=2`);
     // Wait for pagination element to get page count
     await page.waitForSelector(
       "#yw1 > div.pager > ul > li.tm-pagination__list-item.tm-pagination__list-item--icon-last-page > a"
@@ -25,7 +25,7 @@ async function leagueScraper(browser, page, competition) {
       parseInt(el.querySelector("a").getAttribute("href").split("=").pop())
     );
 
-    for (let i = 1; i < pageCount; i++) {
+    for (let i = 2; i < pageCount; i++) {
       // Navigate to each page
 
       await page.waitForSelector("td.extrarow");
