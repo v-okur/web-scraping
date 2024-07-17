@@ -1,5 +1,5 @@
 /* const { postPlayer } = require("../../api/postPlayer"); */
-const db = require("../../api/db");
+const db = require("../../database/db");
 
 async function playerScraper(page, team) {
   try {
