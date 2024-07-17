@@ -1,0 +1,20 @@
+{
+  "name": "transfermarkt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "transfermarkt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon transfermarkt.js"
+  },
+  "keywords": [],
+  "author": "v-okur",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.8.0",
+    "nodemon": "^3.1.4",
+    "puppeteer": "^22.12.1"
+  }
+}
