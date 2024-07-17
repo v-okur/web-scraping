@@ -1,6 +1,6 @@
 /* const { postLeague } = require("../../api/postLeague"); */
 const teamScraper = require("./teamScraper");
-const db = require("../../api/db");
+const db = require("../../darabase/db");
 
 async function leagueScraper(browser, page, competition) {
   const allowedTiers = [
@@ -13,11 +13,9 @@ async function leagueScraper(browser, page, competition) {
   ];
 
   try {
-    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=2`);
+    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=1`);
     // Wait for pagination element to get page count
-    await page.waitForSelector(
-      "#yw1 > div.pager > ul > li.tm-pagination__list-item.tm-pagination__list-item--icon-last-page > a"
-    );
+    await page.waitForSelector(".responsive-table > .grid-view");
     const pagesElement = await page.$(
       "#yw1 > div.pager > ul > li.tm-pagination__list-item.tm-pagination__list-item--icon-last-page"
     );
@@ -123,20 +121,25 @@ async function leagueScraper(browser, page, competition) {
         if (allowedTiers.includes(league.tier.toUpperCase())) {
           try {
             league.competition = competition;
-            await db.insert("leagues", league);
+            //await db.insert("leagues", league);
+
             await teamScraper(browser, league.link, league._id, 1);
           } catch (error) {
             console.error("File writing error", error);
           }
         }
       }
-      await page.waitForSelector(
-        "#yw1 > div.pager > ul > li.tm-pagination__list-item.tm-pagination__list-item--icon-next-page > a"
-      );
       const nextPage = await page.$(
         "#yw1 > div.pager > ul > li.tm-pagination__list-item.tm-pagination__list-item--icon-next-page > a"
       );
       await nextPage.evaluate((b) => b.click());
+      await page.waitForSelector(".responsive-table > .grid-view-loading");
+      await page.waitForFunction(
+        () =>
+          !document
+            .querySelector("#yw1")
+            .classList.contains("grid-view-loading")
+      );
     }
   } catch (error) {
     console.error("Error occured", error);

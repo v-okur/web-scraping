@@ -1,5 +1,5 @@
 /* const { postTeam } = require("../../api/postTeam"); */
-const db = require("../../api/db");
+const db = require("../../database/db");
 const playerScraper = require("./playerScraper");
 
 async function teamScraper(browser, leagueLink, leagueID, competition_id) {
