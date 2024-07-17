@@ -121,7 +121,7 @@ async function leagueScraper(browser, page, competition) {
         if (allowedTiers.includes(league.tier.toUpperCase())) {
           try {
             league.competition = competition;
-            //await db.insert("leagues", league);
+            await db.insert("leagues", league);
 
             await teamScraper(browser, league.link, league._id, 1);
           } catch (error) {
