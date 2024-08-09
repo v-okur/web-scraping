@@ -1,6 +1,4 @@
-/* const { postPlayer } = require("../../api/postPlayer"); */
 const db = require("../../database/db");
-
 async function playerScraper(page, team) {
   try {
     await page.goto(`https://www.transfermarkt.com${team.link}`);
@@ -146,20 +144,12 @@ async function playerScraper(page, team) {
 
     players.map(async (player) => {
       player.team_id = team._id;
-      //TODO: implement same logic for mongoDB
       if (player.captain) {
         db.setCaptain(team._id, player._id);
+        console.log(`team_id ${team._id}'s captain_id = ${player._id}`);
       }
 
       await db.insert("players", player);
-
-      /* const previous_team = {
-        id: player.previous_team_id,
-        name: player.previous_team_name,
-        logo: player.previous_team_logo,
-        league_id: 1,
-      };
-      await createTeam(previous_team); */
     });
   } catch (error) {
     console.error("Error occured", error);

@@ -6,6 +6,7 @@ async function main() {
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768 });
   const competition = "europa";
+  console.log(competition);
   await leagueScraper(browser, page, competition);
 }
 main();

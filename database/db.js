@@ -32,9 +32,19 @@ async function insert(entityName, data) {
   try {
     const db = await connect();
     const collection = db.collection(entityName);
+    const existingDocument = await collection.findOne({ _id: data._id });
+    if (existingDocument) {
+      console.log(
+        `Document with _id: ${
+          data._id
+        } already exists in ${entityName.toUpperCase()} collection`
+      );
+      await update(data._id, data, entityName).then(() =>
+        console.log("updated")
+      );
+      return;
+    }
     await collection.insertOne(data);
-    delete data._id;
-    //await collection.insertOne({ _id: data._id }, data);
     console.log(`${data.name} added to ${entityName.toUpperCase()} collection`);
   } catch (error) {
     console.log("Database'e aktarım yaparken hata oluştu:", data.name, error);
@@ -53,7 +63,24 @@ async function setCaptain(team_id, player_id) {
   await collection.updateOne(query, update);
 }
 
+async function update(id, dat, type) {
+  try {
+    const db = await connect();
+    const { _id, ...data } = dat;
+    const collection = db.collection(type);
+    const query = { _id: id };
+    const update = {
+      $set: { ...data },
+    };
+    console.log("data set");
+    await collection.updateOne(query, update);
+  } catch (error) {
+    console.log("An error occured while updating data: ", error);
+  }
+}
+
 module.exports = {
   insert,
+  update,
   setCaptain,
 };

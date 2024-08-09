@@ -1,4 +1,3 @@
-/* const { postLeague } = require("../../api/postLeague"); */
 const teamScraper = require("./teamScraper");
 const db = require("../../database/db");
 
@@ -13,7 +12,7 @@ async function leagueScraper(browser, page, competition) {
   ];
 
   try {
-    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=1`);
+    await page.goto(`https://www.transfermarkt.com/wettbewerbe/europa?page=1`); //TODO:
     // Wait for pagination element to get page count
     await page.waitForSelector(".responsive-table > .grid-view");
     const pagesElement = await page.$(
@@ -23,8 +22,9 @@ async function leagueScraper(browser, page, competition) {
       parseInt(el.querySelector("a").getAttribute("href").split("=").pop())
     );
 
-    for (let i = 2; i < pageCount; i++) {
-      // Navigate to each page
+    for (let i = 1; 8 < pageCount; i++) {
+      console.log(12431231);
+      //TODO: En son 7. sayfanın başında kaldı
 
       await page.waitForSelector("td.extrarow");
 
@@ -34,12 +34,9 @@ async function leagueScraper(browser, page, competition) {
         el.textContent.trim()
       );
       if (!leagueName.toUpperCase().includes("TIER")) continue;
-
+      console.log("don2");
       // Scrape data for current page
       const data = await page.evaluate(async () => {
-        await new Promise(function (resolve) {
-          setTimeout(resolve, 1000);
-        });
         const rows = document.querySelectorAll("#yw1 > table > tbody > tr");
         const leagues = [];
         rows.forEach((row) => {
@@ -117,13 +114,13 @@ async function leagueScraper(browser, page, competition) {
         return leagues;
       });
 
-      for (const league of data) {
-        if (allowedTiers.includes(league.tier.toUpperCase())) {
+      for (const index of data.keys()) {
+        if (allowedTiers.includes(data[index].tier.toUpperCase())) {
           try {
-            league.competition = competition;
-            await db.insert("leagues", league);
+            data[index].competition = competition;
+            //  await db.insert("leagues", data[index]);
 
-            await teamScraper(browser, league.link, league._id, 1);
+            await teamScraper(browser, data[index].link, data[index]._id, 1);
           } catch (error) {
             console.error("File writing error", error);
           }
